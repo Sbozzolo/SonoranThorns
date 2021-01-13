@@ -1,0 +1,12 @@
+# Interface definition for thorn Christoffel
+
+implements: Christoffel
+
+inherits: ADMBase, LeanBSSNMoL, Grid
+
+public:
+
+CCTK_REAL Gammas type=gf timelevels=1 tags='type="scalar" checkpoint="no"'
+{
+    Gamma_ttt, Gamma_ttx, Gamma_tty, Gamma_ttz, Gamma_txx, Gamma_txy, Gamma_txz, Gamma_tyy, Gamma_tyz, Gamma_tzz, Gamma_xtt, Gamma_xtx, Gamma_xty, Gamma_xtz, Gamma_xxx, Gamma_xxy, Gamma_xxz, Gamma_xyy, Gamma_xyz, Gamma_xzz, Gamma_ytt, Gamma_ytx, Gamma_yty, Gamma_ytz, Gamma_yxx, Gamma_yxy, Gamma_yxz, Gamma_yyy, Gamma_yyz, Gamma_yzz, Gamma_ztt, Gamma_ztx, Gamma_zty, Gamma_ztz, Gamma_zxx, Gamma_zxy, Gamma_zxz, Gamma_zyy, Gamma_zyz, Gamma_zzz
+} "4D Christoffel symbols"

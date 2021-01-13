@@ -1,0 +1,3 @@
+# Configuration definition for thorn Christoffel
+
+REQUIRES Fortran TGRtensor

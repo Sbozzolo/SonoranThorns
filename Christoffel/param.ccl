@@ -1,0 +1,13 @@
+# Parameter definitions for thorn Christoffel
+
+CCTK_INT compute_every "How often to compute the Christoffel symbols" STEERABLE = always
+{
+  0:0 :: "Never"
+  1:* :: "Every so often"
+} 0
+
+CCTK_INT derivs_order "Order for the spatial derivatives"
+{
+  4 :: "4th order stencils"
+  6 :: "6th order stencils"
+} 4

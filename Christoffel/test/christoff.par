@@ -1,0 +1,183 @@
+################################################################################
+# Active thorns
+################################################################################
+
+ActiveThorns = "
+ADMBase
+ADMCoupling
+ADMMacros
+AEILocalInterp
+Boundary
+Carpet
+CarpetIOASCII
+CarpetIOBasic
+CarpetIOScalar
+CarpetInterp
+CarpetLib
+CarpetReduce
+CarpetRegrid2
+CarpetSlab
+CartGrid3D
+CoordBase
+CoordGauge
+Exact
+Christoffel
+GenericFD
+IOUtil
+InitBase
+LeanBSSNMoL
+LocalInterp
+LoopControl
+MoL
+NaNChecker
+NewRad
+Slab
+SpaceMask
+StaticConformal
+SummationByParts
+SymBase
+SystemStatistics
+SystemTopology
+TensorTypes
+Time
+TimerReport
+TmunuBase
+"
+
+################################################################################
+# Grid structure
+################################################################################
+
+CartGrid3D::type                     = "coordbase"
+Carpet::domain_from_coordbase        = yes
+CoordBase::domainsize                = "minmax"
+
+# make sure all (xmax - xmin)/dx are integers!
+CoordBase::xmin                      = -12.0
+CoordBase::ymin                      = -12.0
+CoordBase::zmin                      = -12.0
+CoordBase::xmax                      = +12.0
+CoordBase::ymax                      = +12.0
+CoordBase::zmax                      = +12.0
+CoordBase::dx                        =  0.4
+CoordBase::dy                        =  0.4
+CoordBase::dz                        =  0.4
+
+driver::ghost_size                   = 4
+
+CoordBase::boundary_size_x_lower     = 4
+CoordBase::boundary_size_y_lower     = 4
+CoordBase::boundary_size_z_lower     = 4
+CoordBase::boundary_size_x_upper     = 4
+CoordBase::boundary_size_y_upper     = 4
+CoordBase::boundary_size_z_upper     = 4
+
+Time::dtfac                          = 0.4
+
+################################################################################
+# Mesh refinement
+################################################################################
+
+Carpet::max_refinement_levels           = 2
+CarpetRegrid2::num_centres              = 2
+CarpetRegrid2::num_levels_1             = 2
+
+CarpetRegrid2::radius_1[1]              = 2.0
+
+Carpet::use_buffer_zones                = yes
+Carpet::prolongation_order_space        = 5
+Carpet::prolongation_order_time         = 2
+
+CarpetRegrid2::freeze_unaligned_levels  = yes
+CarpetRegrid2::regrid_every             = 128
+CarpetRegrid2::verbose                  = no
+
+################################################################################
+# Initial data
+################################################################################
+
+Exact::exact_model = "Kerr/Kerr-Schild"
+Exact::exact_order = 4
+Exact::Kerr_KerrSchild__t = 0
+Exact::Kerr_KerrSchild__boost_v = 0.95
+
+Christoffel::compute_every = 1
+Christoffel::derivs_order  = 6
+
+ADMBase::initial_data                 = "exact"
+ADMBase::initial_lapse                = "exact"
+ADMBase::initial_shift                = "exact"
+ADMBase::initial_dtlapse              = "exact"
+ADMBase::initial_dtshift              = "exact"
+
+ADMBase::lapse_timelevels             = 3
+ADMBase::shift_timelevels             = 3
+ADMBase::metric_timelevels            = 3
+
+Carpet::init_fill_timelevels            = yes
+InitBase::initial_data_setup_method     = "init_some_levels"
+Carpet::init_3_timelevels               = no
+
+################################################################################
+# Evolution and boundary
+################################################################################
+
+TmunuBase::stress_energy_storage  = yes
+TmunuBase::stress_energy_at_RHS   = yes
+TmunuBase::timelevels             = 1
+TmunuBase::prolongation_type      = "none"
+
+ADMBase::evolution_method               = "LeanBSSNMoL"
+ADMBase::lapse_evolution_method         = "static"
+ADMBase::shift_evolution_method         = "static"
+ADMBase::metric_type                    = "physical"
+
+LeanBSSNMoL::impose_conf_fac_floor_at_initial  = yes
+LeanBSSNMoL::eta_beta                     = 1.5
+LeanBSSNMoL::eta_beta_dynamic             = no
+LeanBSSNMoL::conf_fac_floor               = 1.0d-04
+LeanBSSNMoL::derivs_order                 = 6
+LeanBSSNMoL::use_advection_stencils       = yes
+
+################################################################################
+# Time integration
+################################################################################
+
+MoL::ODE_Method                         = "rk4"
+MoL::MoL_Intermediate_Steps             = 4
+MoL::MoL_Num_Scratch_Levels             = 1
+
+Carpet::num_integrator_substeps         = 4
+
+################################################################################
+# Interpolation
+################################################################################
+
+CarpetInterp::check_tree_search         = no
+CarpetInterp::tree_search               = yes
+
+################################################################################
+# Correctness checking
+################################################################################
+
+CarpetLib::poison_new_memory            = yes
+Carpet::poison_new_timelevels           = no
+Carpet::check_for_poison                = no
+
+################################################################################
+# Output
+################################################################################
+
+Cactus::cctk_run_title                  = "$parfile"
+IO::out_dir                             = "$parfile"
+IO::out_fileinfo                        = "axis labels"
+IOScalar::one_file_per_group            = yes
+IOASCII::one_file_per_group             = yes
+
+IOASCII::out1D_every = 128
+IOASCII::out1D_vars  = "
+Christoffel::Gammas
+"
+
+Cactus::terminate                               = time
+Cactus::cctk_final_time                         = 0

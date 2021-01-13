@@ -1,0 +1,21 @@
+STORAGE: Gammas
+
+schedule Christoffel_zero at BASEGRID
+{
+    LANG: Fortran
+    OPTIONS: LOCAL
+    WRITES: Christoffel::Gammas(Everywhere)
+}
+"Set Gammas to zero"
+
+schedule Christoffel_compute at ANALYSIS
+{
+    LANG: Fortran
+    OPTIONS: LOCAL
+    READS: LeanBSSNMoL::conf_fac(Interior), LeanBSSNMoL::rhs_hmetric(Interior),
+           LeanBSSNMoL::hmetric(Interior), LeanBSSNMoL::rhs_conf_fac(Interior)
+    READS: ADMBase::alp(Everywhere), ADMBase::shift(Everywhere), ADMBase::metric(Everywhere),
+           ADMBase::dtlapse(Interior), ADMBase::dtshift(Interior)
+    WRITES: Christoffel::Gammas(Interior)
+
+} "Compute the 4D Christoffel symbols"
