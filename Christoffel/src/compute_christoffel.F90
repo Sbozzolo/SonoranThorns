@@ -18,151 +18,11 @@
 #include "cctk_Parameters.h"
 #include "cctk_Functions.h"
 
-subroutine invert4x4(m, inv, ierr)
-  ! Adapted from the GPL'd module in https://github.com/emascot/Inverse
-  implicit none
-  CCTK_REAL, intent(in) :: m(4,4)
-  CCTK_REAL, intent(out) :: inv(4,4)
-  CCTK_INT, intent(out) :: ierr
-  CCTK_INT :: i,j
-  CCTK_REAL :: det, invdet
-  CCTK_REAL, parameter ::  one  = 1
-
-  inv(1,1) = m(2,2) * m(3,3) * m(4,4) - &
-       m(2,2) * m(3,4) * m(4,3) - &
-       m(3,2) * m(2,3) * m(4,4) + &
-       m(3,2) * m(2,4) * m(4,3) + &
-       m(4,2) * m(2,3) * m(3,4) - &
-       m(4,2) * m(2,4) * m(3,3)
-
-  inv(2,1) =-m(2,1) * m(3,3) * m(4,4) + &
-       m(2,1) * m(3,4) * m(4,3) + &
-       m(3,1) * m(2,3) * m(4,4) - &
-       m(3,1) * m(2,4) * m(4,3) - &
-       m(4,1) * m(2,3) * m(3,4) + &
-       m(4,1) * m(2,4) * m(3,3)
-
-  inv(3,1) = m(2,1) * m(3,2) * m(4,4) - &
-       m(2,1) * m(3,4) * m(4,2) - &
-       m(3,1) * m(2,2) * m(4,4) + &
-       m(3,1) * m(2,4) * m(4,2) + &
-       m(4,1) * m(2,2) * m(3,4) - &
-       m(4,1) * m(2,4) * m(3,2)
-
-  inv(4,1) =-m(2,1) * m(3,2) * m(4,3) + &
-       m(2,1) * m(3,3) * m(4,2) + &
-       m(3,1) * m(2,2) * m(4,3) - &
-       m(3,1) * m(2,3) * m(4,2) - &
-       m(4,1) * m(2,2) * m(3,3) + &
-       m(4,1) * m(2,3) * m(3,2)
-
-  inv(1,2) =-m(1,2) * m(3,3) * m(4,4) + &
-       m(1,2) * m(3,4) * m(4,3) + &
-       m(3,2) * m(1,3) * m(4,4) - &
-       m(3,2) * m(1,4) * m(4,3) - &
-       m(4,2) * m(1,3) * m(3,4) + &
-       m(4,2) * m(1,4) * m(3,3)
-
-  inv(2,2) = m(1,1) * m(3,3) * m(4,4) - &
-       m(1,1) * m(3,4) * m(4,3) - &
-       m(3,1) * m(1,3) * m(4,4) + &
-       m(3,1) * m(1,4) * m(4,3) + &
-       m(4,1) * m(1,3) * m(3,4) - &
-       m(4,1) * m(1,4) * m(3,3)
-
-  inv(3,2) =-m(1,1) * m(3,2) * m(4,4) + &
-       m(1,1) * m(3,4) * m(4,2) + &
-       m(3,1) * m(1,2) * m(4,4) - &
-       m(3,1) * m(1,4) * m(4,2) - &
-       m(4,1) * m(1,2) * m(3,4) + &
-       m(4,1) * m(1,4) * m(3,2)
-
-  inv(4,2) = m(1,1) * m(3,2) * m(4,3) - &
-       m(1,1) * m(3,3) * m(4,2) - &
-       m(3,1) * m(1,2) * m(4,3) + &
-       m(3,1) * m(1,3) * m(4,2) + &
-       m(4,1) * m(1,2) * m(3,3) - &
-       m(4,1) * m(1,3) * m(3,2)
-
-  inv(1,3) = m(1,2) * m(2,3) * m(4,4) - &
-       m(1,2) * m(2,4) * m(4,3) - &
-       m(2,2) * m(1,3) * m(4,4) + &
-       m(2,2) * m(1,4) * m(4,3) + &
-       m(4,2) * m(1,3) * m(2,4) - &
-       m(4,2) * m(1,4) * m(2,3)
-
-  inv(2,3) =-m(1,1) * m(2,3) * m(4,4) + &
-       m(1,1) * m(2,4) * m(4,3) + &
-       m(2,1) * m(1,3) * m(4,4) - &
-       m(2,1) * m(1,4) * m(4,3) - &
-       m(4,1) * m(1,3) * m(2,4) + &
-       m(4,1) * m(1,4) * m(2,3)
-
-  inv(3,3) = m(1,1) * m(2,2) * m(4,4) - &
-       m(1,1) * m(2,4) * m(4,2) - &
-       m(2,1) * m(1,2) * m(4,4) + &
-       m(2,1) * m(1,4) * m(4,2) + &
-       m(4,1) * m(1,2) * m(2,4) - &
-       m(4,1) * m(1,4) * m(2,2)
-
-  inv(4,3) =-m(1,1) * m(2,2) * m(4,3) + &
-       m(1,1) * m(2,3) * m(4,2) + &
-       m(2,1) * m(1,2) * m(4,3) - &
-       m(2,1) * m(1,3) * m(4,2) - &
-       m(4,1) * m(1,2) * m(2,3) + &
-       m(4,1) * m(1,3) * m(2,2)
-
-  inv(1,4) =-m(1,2) * m(2,3) * m(3,4) + &
-       m(1,2) * m(2,4) * m(3,3) + &
-       m(2,2) * m(1,3) * m(3,4) - &
-       m(2,2) * m(1,4) * m(3,3) - &
-       m(3,2) * m(1,3) * m(2,4) + &
-       m(3,2) * m(1,4) * m(2,3)
-
-  inv(2,4) = m(1,1) * m(2,3) * m(3,4) - &
-       m(1,1) * m(2,4) * m(3,3) - &
-       m(2,1) * m(1,3) * m(3,4) + &
-       m(2,1) * m(1,4) * m(3,3) + &
-       m(3,1) * m(1,3) * m(2,4) - &
-       m(3,1) * m(1,4) * m(2,3)
-
-  inv(3,4) =-m(1,1) * m(2,2) * m(3,4) + &
-       m(1,1) * m(2,4) * m(3,2) + &
-       m(2,1) * m(1,2) * m(3,4) - &
-       m(2,1) * m(1,4) * m(3,2) - &
-       m(3,1) * m(1,2) * m(2,4) + &
-       m(3,1) * m(1,4) * m(2,2)
-
-  inv(4,4) = m(1,1) * m(2,2) * m(3,3) - &
-       m(1,1) * m(2,3) * m(3,2) - &
-       m(2,1) * m(1,2) * m(3,3) + &
-       m(2,1) * m(1,3) * m(3,2) + &
-       m(3,1) * m(1,2) * m(2,3) - &
-       m(3,1) * m(1,3) * m(2,2)
-
-  det = m(1,1) * inv(1,1) + m(1,2) * inv(2,1) + &
-       m(1,3) * inv(3,1) + m(1,4) * inv(4,1)
-
-  if (det.eq.0) then
-     ierr = 1
-     call CCTK_WARN(0,"Found zero determinant in metric!")
-  end if
-
-  invdet = one / det
-
-  do i = 1,4
-     do j = 1,4
-        inv(i,j) = inv(i,j) * invdet
-     enddo
-  enddo
-
-  ierr = 0
-end subroutine invert4x4
-
 subroutine Christoffel_zero( CCTK_ARGUMENTS )
 
   implicit none
   DECLARE_CCTK_ARGUMENTS
+  DECLARE_CCTK_PARAMETERS
 
   Gamma_ttt = 0
   Gamma_ttx = 0
@@ -205,7 +65,6 @@ subroutine Christoffel_zero( CCTK_ARGUMENTS )
   Gamma_zyz = 0
   Gamma_zzz = 0
 
-
 end subroutine Christoffel_zero
 
 subroutine Christoffel_compute( CCTK_ARGUMENTS )
@@ -222,9 +81,9 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
   CCTK_INT ierr
 
   ! Here we are not using the symmetry of the matrix
-  CCTK_REAL :: gg(3,3), gab(4,4), gUP(4,4), dgg(3,3,3), dgab(4,4,4), ones(4,4)
+  CCTK_REAL :: gg(3,3), ggu(3,3), gab(4,4), gUP(4,4), dgg(3,3,3), dgab(4,4,4)
   CCTK_REAL :: cf1(4,4,4), cf2(4,4,4)
-  CCTK_REAL :: alph, beta(3)
+  CCTK_REAL :: alph, one_over_alph_squared, detg, beta(3)
   CCTK_REAL :: dt_alph, dt_beta(3), dt_gg(3,3)
   CCTK_REAL :: dalph(3), dbeta(3,3)
   CCTK_REAL :: ww, dww, oww_sq
@@ -248,10 +107,11 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
   ody60 = 1 / (60 * CCTK_DELTA_SPACE(2))
   odz60 = 1 / (60 * CCTK_DELTA_SPACE(3))
 
-  !$OMP PARALLEL DO COLLAPSE(3) &
-  !$OMP PRIVATE( i, j, k, gab, dgab, ww, dww, oww_sq, &
-  !$OMP gg, alph, beta, dt_alph, dt_beta, dt_gg,  &
-  !$OMP dgg, dalph, dbeta, cf1, cf2)
+  !!$OMP PARALLEL DO COLLAPSE(3) &
+  !!$OMP PRIVATE( i, j, k, gab, dgab, ww, dww, oww_sq, &
+  !!$OMP gg, ggu, alph, one_over_alph_squared, detg, &
+  !!$OMP beta, dt_alph, dt_beta, dt_gg,  &
+  !!$OMP dgg, dalph, dbeta, cf1, cf2)
   do k = 1+cctk_nghostzones(3), cctk_lsh(3)-cctk_nghostzones(3)
      do j = 1+cctk_nghostzones(2), cctk_lsh(2)-cctk_nghostzones(2)
         do i = 1+cctk_nghostzones(1), cctk_lsh(1)-cctk_nghostzones(1)
@@ -268,6 +128,8 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
 
            alph      = alp(i,j,k)
 
+           one_over_alph_squared = one / (alph * alph)
+
            beta(1)   = betax(i,j,k)
            beta(2)   = betay(i,j,k)
            beta(3)   = betaz(i,j,k)
@@ -278,6 +140,10 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
            dt_beta(3)   = dtbetaz(i,j,k)
 
            ww = conf_fac(i,j,k)
+
+           ! conf_fac = detg**-1/6
+           detg = ww**(-6.d0)
+
            dww = - 2.d0 * rhs_conf_fac(i, j, k) / (ww * ww * ww)
            oww_sq = one / (ww * ww)
 
@@ -450,12 +316,42 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
            call calc_4metricderivs(gg, alph, beta, dgg, dalph, dbeta, &
                 dt_gg, dt_alph, dt_beta, gab, dgab)
 
-           call invert4x4(gab, gUP, ierr)
+           ! Inverse
+           detg    =       gg(1,1) * gg(2,2) * gg(3,3)                            &
+                + 2 * gg(1,2) * gg(1,3) * gg(2,3)                            &
+                -     gg(1,1) * gg(2,3) ** 2                                 &
+                -     gg(2,2) * gg(1,3) ** 2                                 &
+                -     gg(3,3) * gg(1,2) ** 2
 
-           ! if (abs(x(i,j,k) - 0.8) <= 0.01 .and. abs(y(i,j,k) - 2.0) <= 0.01 .and. abs(z(i,j,k) - 3.0) <= 0.01) then
+           ggu(1,1) = (gg(2,2) * gg(3,3) - gg(2,3) ** 2     ) / detg
+           ggu(2,2) = (gg(1,1) * gg(3,3) - gg(1,3) ** 2     ) / detg
+           ggu(3,3) = (gg(1,1) * gg(2,2) - gg(1,2) ** 2     ) / detg
+           ggu(1,2) = (gg(1,3) * gg(2,3) - gg(1,2) * gg(3,3)) / detg
+           ggu(1,3) = (gg(1,2) * gg(2,3) - gg(1,3) * gg(2,2)) / detg
+           ggu(2,3) = (gg(1,3) * gg(1,2) - gg(2,3) * gg(1,1)) / detg
+           ggu(2,1) = ggu(1,2)
+           ggu(3,1) = ggu(1,3)
+           ggu(3,2) = ggu(2,3)
+
+           gUP(1,1) = -one_over_alph_squared
+           do a = 1, 3
+              gUP(1,a + 1) = one_over_alph_squared * beta(a)
+              gUP(a + 1,1) = one_over_alph_squared * beta(a)
+           end do
+           do a = 1, 3
+              do b = 1, 3
+                 gUP(a + 1, b + 1) = ggu(a,b) - one_over_alph_squared * beta(a) * beta(b)
+              end do
+           end do
+
+           ! if (abs(x(i,j,k) - 0.8) <= 0.1 .and. abs(y(i,j,k) - 2.0) <= 0.1 .and. abs(z(i,j,k) - 3.0) <= 0.1) then
+           !    write (*,*) "HERE detg", detg
            !    write (*,*) "HERE gg1", gg(1,:)
            !    write (*,*) "HERE gg2", gg(2,:)
            !    write (*,*) "HERE gg3", gg(3,:)
+           !    write (*,*) "HERE ggu1", ggu(1,:)
+           !    write (*,*) "HERE ggu2", ggu(2,:)
+           !    write (*,*) "HERE ggu3", ggu(3,:)
            !    write (*,*) "HERE gab1", gab(1,:)
            !    write (*,*) "HERE gab2", gab(2,:)
            !    write (*,*) "HERE gab3", gab(3,:)
@@ -500,6 +396,8 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
            !    write (*,*) "HERE dgab42", dgab(4,2,:)
            !    write (*,*) "HERE dgab43", dgab(4,3,:)
            !    write (*,*) "HERE dgab44", dgab(4,4,:)
+
+           !    stop
            ! end if
 
            ! Christoffel symbols with all indices downstairs
