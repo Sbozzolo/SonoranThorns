@@ -89,7 +89,7 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
   CCTK_REAL :: ww, dww, oww_sq
   CCTK_REAL, parameter ::  one  = 1.d0
 
-  CCTK_REAL dx12, dy12, dz12, odx60, ody60, odz60
+  CCTK_REAL dx2, dy2, dz2, dx12, dy12, dz12, odx60, ody60, odz60
 
   if (compute_every .le. 0) then
      goto 9999
@@ -98,6 +98,10 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
   if (MOD(cctk_iteration, compute_every) .ne. 0) then
      goto 9999
   endif
+
+  dx2 = 2*CCTK_DELTA_SPACE(1)
+  dy2 = 2*CCTK_DELTA_SPACE(2)
+  dz2 = 2*CCTK_DELTA_SPACE(3)
 
   dx12 = 12*CCTK_DELTA_SPACE(1)
   dy12 = 12*CCTK_DELTA_SPACE(2)
@@ -235,8 +239,7 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
               dbeta(3,3) = (  betaz(i,j,k+3) - 9*betaz(i,j,k+2) + 45*betaz(i,j,k+1) &
                    - betaz(i,j,k-3) + 9*betaz(i,j,k-2) - 45*betaz(i,j,k-1) ) * odz60
 
-
-           else
+           else if (derivs_order == 4) then
               dgg(1,1,1) = (   -gxx(i+2,j,k) + 8*gxx(i+1,j,k)                      &
                    - 8*gxx(i-1,j,k) +   gxx(i-2,j,k) ) / dx12
               dgg(1,2,1) = (   -gxy(i+2,j,k) + 8*gxy(i+1,j,k)                      &
@@ -311,6 +314,52 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
               dbeta(3,3)  = (   -betaz(i,j,k+2) + 8*betaz(i,j,k+1)                 &
                    - 8*betaz(i,j,k-1) +   betaz(i,j,k-2) ) / dz12
 
+           else if (derivs_order == 2) then
+              dgg(1,1,1) = (gxx(i+1,j,k) - gxx(i-1,j,k)) / dx2
+              dgg(1,2,1) = (gxy(i+1,j,k) - gxy(i-1,j,k)) / dx2
+              dgg(1,3,1) = (gxz(i+1,j,k) - gxz(i-1,j,k)) / dx2
+              dgg(2,2,1) = (gyy(i+1,j,k) - gyy(i-1,j,k)) / dx2
+              dgg(2,3,1) = (gyz(i+1,j,k) - gyz(i-1,j,k)) / dx2
+              dgg(3,3,1) = (gzz(i+1,j,k) - gzz(i-1,j,k)) / dx2
+
+              dgg(1,1,2) = (gxx(i,j+1,k) - gxx(i,j-1,k)) / dy2
+              dgg(1,2,2) = (gxy(i,j+1,k) - gxy(i,j-1,k)) / dy2
+              dgg(1,3,2) = (gxz(i,j+1,k) - gxz(i,j-1,k)) / dy2
+              dgg(2,2,2) = (gyy(i,j+1,k) - gyy(i,j-1,k)) / dy2
+              dgg(2,3,2) = (gyz(i,j+1,k) - gyz(i,j-1,k)) / dy2
+              dgg(3,3,2) = (gzz(i,j+1,k) - gzz(i,j-1,k)) / dy2
+
+              dgg(1,1,3) = (gxx(i,j,k+1) - gxx(i,j,k-1)) / dz2
+              dgg(1,2,3) = (gxy(i,j,k+1) - gxy(i,j,k-1)) / dz2
+              dgg(1,3,3) = (gxz(i,j,k+1) - gxz(i,j,k-1)) / dz2
+              dgg(2,2,3) = (gyy(i,j,k+1) - gyy(i,j,k-1)) / dz2
+              dgg(2,3,3) = (gyz(i,j,k+1) - gyz(i,j,k-1)) / dz2
+              dgg(3,3,3) = (gzz(i,j,k+1) - gzz(i,j,k-1)) / dz2
+
+
+              dgg(2,1,:) = dgg(1,2,:)
+              dgg(3,1,:) = dgg(1,3,:)
+              dgg(3,2,:) = dgg(2,3,:)
+
+              dalph(1) = (alp(i+1,j,k) - alp(i-1,j,k)) / dx2
+
+              dalph(2) = (alp(i,j+1,k) - alp(i,j-1,k)) / dy2
+
+              dalph(3) = (alp(i,j,k+1) - alp(i,j,k-1)) / dz2
+
+              dbeta(1,1)  = (betax(i+1,j,k) - betax(i-1,j,k)) / dx2
+              dbeta(2,1)  = (betay(i+1,j,k) - betay(i-1,j,k)) / dx2
+              dbeta(3,1)  = (betaz(i+1,j,k) - betaz(i-1,j,k)) / dx2
+
+              dbeta(1,2)  = (betax(i,j+1,k) - betax(i,j-1,k)) / dy2
+              dbeta(2,2)  = (betay(i,j+1,k) - betay(i,j-1,k)) / dy2
+              dbeta(3,2)  = (betaz(i,j+1,k) - betaz(i,j-1,k)) / dy2
+
+              dbeta(1,3)  = (betax(i,j,k+1) - betax(i,j,k-1)) / dz2
+              dbeta(2,3)  = (betay(i,j,k+1) - betay(i,j,k-1)) / dz2
+              dbeta(3,3)  = (betaz(i,j,k+1) - betaz(i,j,k-1)) / dz2
+           else
+              call CCTK_ERROR("derivs_order not implemented")
            end if
 
            call calc_4metricderivs(gg, alph, beta, dgg, dalph, dbeta, &

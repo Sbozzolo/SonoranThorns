@@ -6,8 +6,9 @@ CCTK_INT compute_every "How often to compute the Christoffel symbols" STEERABLE 
   1:* :: "Every so often"
 } 0
 
-CCTK_INT derivs_order "Order for the spatial derivatives"
+CCTK_INT derivs_order "Order for the spatial derivatives"  STEERABLE = always
 {
+  2 :: "2th order stencils"
   4 :: "4th order stencils"
   6 :: "6th order stencils"
 } 4
