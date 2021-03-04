@@ -16,3 +16,8 @@ CCTK_INT derivs_order "Order for the spatial derivatives"  STEERABLE = always
 CCTK_BOOLEAN save_dgab "Save derivatives of the 4 metric"
 {
 } no
+
+CCTK_INT timelevels "Number of active timelevels" STEERABLE=RECOVER
+{
+  0:3 :: ""
+} 3

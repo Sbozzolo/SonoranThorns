@@ -1,7 +1,7 @@
-STORAGE: Gammas[3]
+STORAGE: Gammas[timelevels]
 
 if (save_dgab){
-       STORAGE: derivatives_gab[3]
+       STORAGE: derivatives_gab[timelevels]
 }
 
 schedule Christoffel_zero at BASEGRID
