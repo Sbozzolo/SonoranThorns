@@ -1,24 +1,42 @@
-if (compute_every > 0){
+STORAGE: Gammas[3]
 
-       STORAGE: Gammas
+if (save_dgab){
+       STORAGE: derivatives_gab[3]
+}
 
-       schedule Christoffel_zero at BASEGRID
-       {
-           LANG: Fortran
-           OPTIONS: LOCAL
-           WRITES: Christoffel::Gammas(Everywhere)
-       }
-       "Set Gammas to zero"
+schedule Christoffel_zero at BASEGRID
+{
+    LANG: Fortran
+    OPTIONS: LOCAL
+    WRITES: Christoffel::Gammas(Everywhere)
+    WRITES: Christoffel::derivatives_gab(Everywhere)
+}
+"Set Gammas to zero"
 
-       schedule Christoffel_compute at ANALYSIS
-       {
-           LANG: Fortran
-           OPTIONS: LOCAL
-           READS: LeanBSSNMoL::conf_fac(Interior), LeanBSSNMoL::rhs_hmetric(Interior),
-           LeanBSSNMoL::hmetric(Interior), LeanBSSNMoL::rhs_conf_fac(Interior)
-           READS: ADMBase::alp(Everywhere), ADMBase::shift(Everywhere), ADMBase::metric(Everywhere),
-           ADMBase::dtlapse(Interior), ADMBase::dtshift(Interior)
-           WRITES: Christoffel::Gammas(Interior)
+schedule group Compute_Christoffel at ANALYSIS
+{
+} "Computation of the Christoffel symbols"
 
-       } "Compute the 4D Christoffel symbols"
-   }
+schedule Christoffel_compute in Compute_Christoffel
+{
+    LANG: Fortran
+    OPTIONS: LOCAL
+    READS: LeanBSSNMoL::conf_fac(Interior), LeanBSSNMoL::rhs_hmetric(Interior),
+    LeanBSSNMoL::hmetric(Interior), LeanBSSNMoL::rhs_conf_fac(Interior)
+    READS: ADMBase::alp(Everywhere), ADMBase::shift(Everywhere), ADMBase::metric(Everywhere),
+    ADMBase::dtlapse(Interior), ADMBase::dtshift(Interior)
+    WRITES: Christoffel::Gammas(Interior)
+    WRITES: Christoffel::derivatives_gab(Interior)
+} "Compute the 4D Christoffel symbols"
+
+schedule Christoffel_Boundaries in Compute_Christoffel after Christoffel_compute
+{
+    LANG: Fortran
+    OPTIONS: LEVEL
+    SYNC: Christoffel::Gammas
+    SYNC: Christoffel::derivatives_gab
+} "Enforce symmetry BCs in constraint computation"
+
+schedule GROUP ApplyBCs as Christoffel_ApplyBCs in Compute_Christoffel after Christoffel_Boundaries
+{
+} "Apply boundary conditions"

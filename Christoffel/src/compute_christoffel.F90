@@ -65,6 +65,49 @@ subroutine Christoffel_zero( CCTK_ARGUMENTS )
   Gamma_zyz = 0
   Gamma_zzz = 0
 
+  if (save_dgab/=0) then
+     g_ttt = 0
+     g_ttx = 0
+     g_tty = 0
+     g_ttz = 0
+     g_txx = 0
+     g_txy = 0
+     g_txz = 0
+     g_tyy = 0
+     g_tyz = 0
+     g_tzz = 0
+     g_xtt = 0
+     g_xtx = 0
+     g_xty = 0
+     g_xtz = 0
+     g_xxx = 0
+     g_xxy = 0
+     g_xxz = 0
+     g_xyy = 0
+     g_xyz = 0
+     g_xzz = 0
+     g_ytt = 0
+     g_ytx = 0
+     g_yty = 0
+     g_ytz = 0
+     g_yxx = 0
+     g_yxy = 0
+     g_yxz = 0
+     g_yyy = 0
+     g_yyz = 0
+     g_yzz = 0
+     g_ztt = 0
+     g_ztx = 0
+     g_zty = 0
+     g_ztz = 0
+     g_zxx = 0
+     g_zxy = 0
+     g_zxz = 0
+     g_zyy = 0
+     g_zyz = 0
+     g_zzz = 0
+  end if
+
 end subroutine Christoffel_zero
 
 subroutine Christoffel_compute( CCTK_ARGUMENTS )
@@ -523,6 +566,50 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
            Gamma_zyz(i,j,k) = cf2(4,3,4)
            Gamma_zzz(i,j,k) = cf2(4,4,4)
 
+           if (save_dgab/= 0) then
+              ! Here the derivative index is the first, but in dgab is the last
+              ! (We follow the same names as Gammas)
+              g_ttt(i,j,k) = dgab(1,1,1)
+              g_ttx(i,j,k) = dgab(1,2,1)
+              g_tty(i,j,k) = dgab(1,3,1)
+              g_ttz(i,j,k) = dgab(1,4,1)
+              g_txx(i,j,k) = dgab(2,2,1)
+              g_txy(i,j,k) = dgab(2,3,1)
+              g_txz(i,j,k) = dgab(2,4,1)
+              g_tyy(i,j,k) = dgab(3,3,1)
+              g_tyz(i,j,k) = dgab(3,4,1)
+              g_tzz(i,j,k) = dgab(4,4,1)
+              g_xtt(i,j,k) = dgab(1,1,2)
+              g_xtx(i,j,k) = dgab(1,2,2)
+              g_xty(i,j,k) = dgab(1,3,2)
+              g_xtz(i,j,k) = dgab(1,4,2)
+              g_xxx(i,j,k) = dgab(2,2,2)
+              g_xxy(i,j,k) = dgab(2,3,2)
+              g_xxz(i,j,k) = dgab(2,4,2)
+              g_xyy(i,j,k) = dgab(3,3,2)
+              g_xyz(i,j,k) = dgab(3,4,2)
+              g_xzz(i,j,k) = dgab(4,4,2)
+              g_ytt(i,j,k) = dgab(1,1,3)
+              g_ytx(i,j,k) = dgab(1,2,3)
+              g_yty(i,j,k) = dgab(1,3,3)
+              g_ytz(i,j,k) = dgab(1,4,3)
+              g_yxx(i,j,k) = dgab(2,2,3)
+              g_yxy(i,j,k) = dgab(2,3,3)
+              g_yxz(i,j,k) = dgab(2,4,3)
+              g_yyy(i,j,k) = dgab(3,3,3)
+              g_yyz(i,j,k) = dgab(3,4,3)
+              g_yzz(i,j,k) = dgab(4,4,3)
+              g_ztt(i,j,k) = dgab(1,1,4)
+              g_ztx(i,j,k) = dgab(1,2,4)
+              g_zty(i,j,k) = dgab(1,3,4)
+              g_ztz(i,j,k) = dgab(1,4,4)
+              g_zxx(i,j,k) = dgab(2,2,4)
+              g_zxy(i,j,k) = dgab(2,3,4)
+              g_zxz(i,j,k) = dgab(2,4,4)
+              g_zyy(i,j,k) = dgab(3,3,4)
+              g_zyz(i,j,k) = dgab(3,4,4)
+              g_zzz(i,j,k) = dgab(4,4,4)
+           end if
         end do
      end do
   end do
