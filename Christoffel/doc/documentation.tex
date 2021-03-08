@@ -95,7 +95,7 @@
 \begin{abstract}
   \texttt{Christoffel} computes the four-dimensional connection coefficients
   using the derivatives of the metric. We compute the spatial derivatives with
-  finite difference methods (4th or 6th order), and we read off the time
+  finite difference methods (2nd, 4th, or 6th order), and we read off the time
   derivatives from the right-hand-sides of the evolution equations.
 \end{abstract}
 
@@ -130,6 +130,15 @@ changes are required:
   set to \texttt{static}, \texttt{LeanBSSNMoL} must not touch \texttt{dtlapse}
   and \texttt{dtshift}.
 \end{enumerate}
+
+\texttt{Christoffel} optionally saves and compute the derivatives of the
+four-dimensional metric. This is enabled by the \texttt{save_dgab} parameter.
+
+\texttt{Christoffel} does not do time interpolation, so \texttt{compute_every}
+should be set to a value such that all the refinement levels are at the same
+time.
+
+
 
 % Do not delete next line
 % END CACTUS THORNGUIDE

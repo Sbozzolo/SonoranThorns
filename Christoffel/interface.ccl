@@ -17,12 +17,12 @@ USES FUNCTION Boundary_SelectGroupForBC
 
 public:
 
-CCTK_REAL Gammas type=gf timelevels=3 tags='type="scalar" checkpoint="no"'
+CCTK_REAL Gammas type=gf timelevels=1 tags='type="scalar" checkpoint="no" InterpNumTimelevels=1'
 {
     Gamma_ttt, Gamma_ttx, Gamma_tty, Gamma_ttz, Gamma_txx, Gamma_txy, Gamma_txz, Gamma_tyy, Gamma_tyz, Gamma_tzz, Gamma_xtt, Gamma_xtx, Gamma_xty, Gamma_xtz, Gamma_xxx, Gamma_xxy, Gamma_xxz, Gamma_xyy, Gamma_xyz, Gamma_xzz, Gamma_ytt, Gamma_ytx, Gamma_yty, Gamma_ytz, Gamma_yxx, Gamma_yxy, Gamma_yxz, Gamma_yyy, Gamma_yyz, Gamma_yzz, Gamma_ztt, Gamma_ztx, Gamma_zty, Gamma_ztz, Gamma_zxx, Gamma_zxy, Gamma_zxz, Gamma_zyy, Gamma_zyz, Gamma_zzz
 } "4D Christoffel symbols"
 
-CCTK_REAL derivatives_gab type=gf timelevels=3 tags='type="scalar" checkpoint="no"'
+CCTK_REAL derivatives_gab type=gf timelevels=1 tags='type="scalar" checkpoint="no" InterpNumTimelevels=1'
 {
     # Here the derivative index is the first!!!
     g_ttt, g_ttx, g_tty, g_ttz, g_txx, g_txy, g_txz, g_tyy, g_tyz, g_tzz, g_xtt, g_xtx, g_xty, g_xtz, g_xxx, g_xxy, g_xxz, g_xyy, g_xyz, g_xzz, g_ytt, g_ytx, g_yty, g_ytz, g_yxx, g_yxy, g_yxz, g_yyy, g_yyz, g_yzz, g_ztt, g_ztx, g_zty, g_ztz, g_zxx, g_zxy, g_zxz, g_zyy, g_zyz, g_zzz

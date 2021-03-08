@@ -20,5 +20,5 @@ computes the right-hand-side of the evolution equations after the initial data.
 `Christoffel` optionally saves and compute the derivatives of the
 four-dimensional metric.
 
-`Christoffel` defined up to 80 grid functions with three timelevels, so it can
-be very memory-intensive!
+`Christoffel` does not do time interpolation, so `compute_every` should be set
+to a value such that all the refinement levels are at the same time.
