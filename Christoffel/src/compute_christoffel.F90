@@ -409,11 +409,12 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
                 dt_gg, dt_alph, dt_beta, gab, dgab)
 
            ! Inverse
-           detg    =       gg(1,1) * gg(2,2) * gg(3,3)                            &
-                + 2 * gg(1,2) * gg(1,3) * gg(2,3)                            &
-                -     gg(1,1) * gg(2,3) ** 2                                 &
-                -     gg(2,2) * gg(1,3) ** 2                                 &
-                -     gg(3,3) * gg(1,2) ** 2
+           ! If we are using Lean, we have already computed this
+           ! detg    =       gg(1,1) * gg(2,2) * gg(3,3)                            &
+           !      + 2 * gg(1,2) * gg(1,3) * gg(2,3)                            &
+           !      -     gg(1,1) * gg(2,3) ** 2                                 &
+           !      -     gg(2,2) * gg(1,3) ** 2                                 &
+           !      -     gg(3,3) * gg(1,2) ** 2
 
            ggu(1,1) = (gg(2,2) * gg(3,3) - gg(2,3) ** 2     ) / detg
            ggu(2,2) = (gg(1,1) * gg(3,3) - gg(1,3) ** 2     ) / detg
