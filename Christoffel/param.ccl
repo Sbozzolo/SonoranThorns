@@ -13,7 +13,7 @@ CCTK_INT derivs_order "Order for the spatial derivatives"  STEERABLE = always
   6 :: "6th order stencils"
 } 4
 
-CCTK_BOOLEAN save_dgab "Save derivatives of the 4 metric"
+CCTK_BOOLEAN save_dgab "Save derivatives of the 4 metric" STEERABLE = always
 {
 } no
 
