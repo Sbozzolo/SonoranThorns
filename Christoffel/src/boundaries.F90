@@ -35,10 +35,12 @@ subroutine Christoffel_Boundaries( CCTK_ARGUMENTS )
      if (ierr < 0)                                                           &
           call CCTK_ERROR("Failed to register BC for Christoffel:Gammas!")
 
-     ierr = Boundary_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, bndsize, -one, &
-          "Christoffel::derivatives_gab", "flat")
-     if (ierr < 0)                                                           &
-          call CCTK_ERROR("Failed to register BC for Christoffel:derivatives_gab!")
+     if (save_dgab) then
+        ierr = Boundary_SelectGroupForBC(cctkGH, CCTK_ALL_FACES, bndsize, -one, &
+             "Christoffel::derivatives_gab", "flat")
+        if (ierr < 0)                                                           &
+             call CCTK_ERROR("Failed to register BC for Christoffel:derivatives_gab!")
+     end if
 
   end if
 end subroutine Christoffel_Boundaries
