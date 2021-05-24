@@ -154,11 +154,11 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
   ody60 = 1 / (60 * CCTK_DELTA_SPACE(2))
   odz60 = 1 / (60 * CCTK_DELTA_SPACE(3))
 
-  !!$OMP PARALLEL DO COLLAPSE(3) &
-  !!$OMP PRIVATE( i, j, k, gab, dgab, ww, dww, oww_sq, &
-  !!$OMP gg, ggu, alph, one_over_alph_squared, detg, &
-  !!$OMP beta, dt_alph, dt_beta, dt_gg,  &
-  !!$OMP dgg, dalph, dbeta, cf1, cf2)
+  !$OMP PARALLEL DO COLLAPSE(3) &
+  !$OMP PRIVATE( i, j, k, gab, dgab, ww, dww, oww_sq, &
+  !$OMP gg, ggu, alph, one_over_alph_squared, detg, &
+  !$OMP beta, dt_alph, dt_beta, dt_gg,  &
+  !$OMP dgg, dalph, dbeta, cf1, cf2)
   do k = 1+cctk_nghostzones(3), cctk_lsh(3)-cctk_nghostzones(3)
      do j = 1+cctk_nghostzones(2), cctk_lsh(2)-cctk_nghostzones(2)
         do i = 1+cctk_nghostzones(1), cctk_lsh(1)-cctk_nghostzones(1)
