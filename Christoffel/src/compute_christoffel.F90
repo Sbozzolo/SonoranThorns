@@ -156,7 +156,7 @@ subroutine Christoffel_compute( CCTK_ARGUMENTS )
 
   !$OMP PARALLEL DO COLLAPSE(3) &
   !$OMP PRIVATE( i, j, k, gab, dgab, ww, dww, oww_sq, &
-  !$OMP gg, ggu, alph, one_over_alph_squared, detg, &
+  !$OMP gg, ggu, gUP, alph, one_over_alph_squared, detg, &
   !$OMP beta, dt_alph, dt_beta, dt_gg,  &
   !$OMP dgg, dalph, dbeta, cf1, cf2)
   do k = 1+cctk_nghostzones(3), cctk_lsh(3)-cctk_nghostzones(3)

@@ -21,10 +21,10 @@ schedule Christoffel_compute in Compute_Christoffel
 {
     LANG: Fortran
     OPTIONS: LOCAL
-    READS: LeanBSSNMoL::conf_fac(Interior), LeanBSSNMoL::rhs_hmetric(Interior),
-    LeanBSSNMoL::hmetric(Interior), LeanBSSNMoL::rhs_conf_fac(Interior)
-    READS: ADMBase::alp(Everywhere), ADMBase::shift(Everywhere), ADMBase::metric(Everywhere),
-    ADMBase::dtlapse(Interior), ADMBase::dtshift(Interior)
+    READS: LeanBSSNMoL::conf_fac(Interior), LeanBSSNMoL::rhs_hmetric(Interior)
+    READS: LeanBSSNMoL::hmetric(Interior), LeanBSSNMoL::rhs_conf_fac(Interior)
+    READS: ADMBase::alp(Everywhere), ADMBase::shift(Everywhere), ADMBase::metric(Everywhere)
+    READS: ADMBase::dtlapse(Interior), ADMBase::dtshift(Interior)
     WRITES: Christoffel::Gammas(Interior)
     WRITES: Christoffel::derivatives_gab(Interior)
 } "Compute the 4D Christoffel symbols"
